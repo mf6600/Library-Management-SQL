@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -103,15 +104,6 @@ public class CreateBorrower extends JFrame {
 		contentPane.add(textState);
 		textState.setColumns(10);
 		
-		JLabel lblZip = new JLabel("Zip");
-		lblZip.setBounds(281, 143, 46, 14);
-		contentPane.add(lblZip);
-		
-		textZip = new JTextField();
-		textZip.setBounds(326, 140, 86, 20);
-		contentPane.add(textZip);
-		textZip.setColumns(10);
-		
 		JLabel lblPhone = new JLabel("Phone Number");
 		lblPhone.setBounds(34, 183, 86, 14);
 		contentPane.add(lblPhone);
@@ -126,8 +118,23 @@ public class CreateBorrower extends JFrame {
 		contentPane.add(btnCreate);
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(!(textZip.getText().isEmpty() || textState.getText().isEmpty() || textCity.getText().isEmpty() || textAddress.getText().isEmpty() || textPhone.getText().isEmpty() || textEmail.getText().isEmpty() || textLastName.getText().isEmpty() || textFirstName.getText().isEmpty() || textSSN.getText().isEmpty())) {
-					// enter textfields in to new borrower object
+				if(!(textState.getText().isEmpty() || textCity.getText().isEmpty() || textAddress.getText().isEmpty() || textPhone.getText().isEmpty() || textEmail.getText().isEmpty() || textLastName.getText().isEmpty() || textFirstName.getText().isEmpty() || textSSN.getText().isEmpty())) {
+
+					String ssn = textSSN.getText();
+					String firstName = textFirstName.getText();
+					String lastName = textLastName.getText();
+					String email = textEmail.getText();
+					String address = textAddress.getText();
+					String city = textCity.getText();
+					String state = textState.getText();
+					String phone = textPhone.getText();
+
+					try {
+						databaseController db = new databaseController();
+						db.addBorrower(ssn, firstName, lastName, email, address, city, state, phone);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 					dispose();
 					Home h = new Home();
 		        	h.setVisible(true);
