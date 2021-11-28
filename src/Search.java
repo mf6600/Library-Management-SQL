@@ -1,3 +1,5 @@
+import com.mysql.cj.jdbc.MysqlDataSource;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -9,10 +11,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.JList;
 
+import java.io.IOException;
+import java.util.*;
+import java.sql.*;
+
 
 public class Search extends JFrame {
 
 	private JPanel contentPane;
+	private Vector<String> searchList = null;
 	
 	/**
 	 * Launch the application.
@@ -21,7 +28,7 @@ public class Search extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Search(String entry) {
+	public Search(String entry) throws SQLException, IOException {
 		setTitle("Search");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -34,16 +41,30 @@ public class Search extends JFrame {
 		btnHome.setBounds(10, 11, 89, 23);
 		contentPane.add(btnHome);
 		btnHome.addActionListener(new ActionListener() {
-	         public void actionPerformed(ActionEvent e) {
-	        	 dispose();
-	        	 Home h = new Home();
-	        	 h.setVisible(true);
-	          }
-	       });
-		
-		JList list = new JList();
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Home h = new Home();
+				h.setVisible(true);
+			}
+		});
+
+
+
+
+
+		Vector<String> titles = new Vector<String>();
+
+
+
+		databaseController db = new databaseController();
+		titles = db.executeBookSearch("SELECT Titles FROM sys.BOOK");
+
+
+		JList list = new JList(titles);
 		list.setBounds(20, 45, 404, 205);
 		contentPane.add(list);
+
+
 	}
 
 }
