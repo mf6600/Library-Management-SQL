@@ -55,9 +55,11 @@ public class Search extends JFrame {
 		Vector<String> titles = new Vector<String>();
 
 
-
+		//INSTANCE OF THE DATABASE CLASS
 		databaseController db = new databaseController();
-		titles = db.executeBookSearch("SELECT Titles FROM sys.BOOK");
+
+		//STORING THE RETURN VECTOR INTO THE LOCAL VECTOR
+		titles = db.executeBookSearch(entry);
 
 
 		JList list = new JList(titles);

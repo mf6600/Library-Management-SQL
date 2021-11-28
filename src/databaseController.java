@@ -35,11 +35,14 @@ public class databaseController {
 
 
     //SEARCH BOOK FUNCTION -- YET TO BE COMPLETED
-    public static Vector<String> executeBookSearch(String command) {
+    //TAKES IN THE SEARCH AND RETURNS A VECTOR WITH SEARCH RESULT
+    public static Vector<String> executeBookSearch(String bookEntry) {
         Vector<String> books = new Vector<>();
 
         try {
             Statement stmt = con.createStatement();
+
+            //HAVE TO RUN THE CORRECT SQL QUERY TO OUTPUT THE BOOK CONTENTS
             ResultSet rs = stmt.executeQuery("SELECT Title FROM sys.BOOK");
 
             while (rs.next()) {
@@ -53,6 +56,7 @@ public class databaseController {
 
         return books;
     }
+
 
     //ADD BORROWER FUNCTION -- COMPLETED
     public static void addBorrower(String ssn, String firstName, String lastName, String email, String address, String city, String state, String phone) {
