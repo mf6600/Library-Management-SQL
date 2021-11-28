@@ -1,8 +1,11 @@
 import com.mysql.cj.jdbc.MysqlDataSource;
 
+import javax.swing.*;
 import java.sql.*;
 import java.sql.DriverManager;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class databaseController {
 
@@ -31,8 +34,6 @@ public class databaseController {
     }
 
 
-
-
     //SEARCH BOOK FUNCTION -- YET TO BE COMPLETED
     public static Vector<String> executeBookSearch(String command) {
         Vector<String> books = new Vector<>();
@@ -53,14 +54,40 @@ public class databaseController {
         return books;
     }
 
-    public static void addBorrower(int ssn, String firstName, String lastName, String email, String address, String city, String state, String phone) {
+    //ADD BORROWER FUNCTION -- COMPLETED
+    public static void addBorrower(String ssn, String firstName, String lastName, String email, String address, String city, String state, String phone) {
 
-        String card_id = ID10;
-        String newId = null;
+        String currentID = "";
+        String newID = "";
 
         try {
             Statement stmt  = con.createStatement();
-            stmt.executeUpdate("INSERT INTO sys.BORROWER (Card_id, Ssn, Bname, Address, Phone) VALUE ('"+newId+"','"+ssn+"','"+firstName+"','"+lastName+"','"+email+"','"+address+"','"+city+"','"+state+"','"+phone+"')");
+            ResultSet rs1 = stmt.executeQuery("SELECT * FROM sys.BORROWER WHERE Ssn in ('"+ssn+"')");
+
+            if (rs1.next()) {
+                JOptionPane.showMessageDialog(null, "The borrower already exists in the system");
+            }
+            else {
+                Statement stmt2  = con.createStatement();
+                ResultSet rs = stmt2.executeQuery("SELECT MAX(Card_id) FROM sys.BORROWER"); //RETURNS ID001000
+                if (rs.next()) {
+                    currentID = rs.getString(1);
+                }
+
+                String temp = currentID.substring(4, currentID.length());
+                int tempInt = Integer.parseInt(temp);
+                tempInt++;
+                newID = "ID00" + tempInt;
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            Statement stmt  = con.createStatement();
+            stmt.executeUpdate("INSERT INTO sys.BORROWER (Card_id, Ssn, firstName, lastName, email, address, city, state, phone) VALUE ('"+newID+"','"+ssn+"','"+firstName+"','"+lastName+"','"+email+"','"+address+"','"+city+"','"+state+"','"+phone+"')");
         } catch (Exception e) {
             e.printStackTrace();
         }
