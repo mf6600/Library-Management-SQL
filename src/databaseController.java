@@ -97,6 +97,66 @@ public class databaseController {
         }
 
     }
+    
+    // Update/Refresh Entries in FINES table
+    public static void update() {
+		try {
+			Statement stmt = con.createStatement();
+			
+			// Increment existing fines by $0.25 if Paid == false
+			String sql1 = "UPDATE sys.FINES "
+					+ "SET Fine_amt = Fine_amt + 0.25 "
+					+ "WHERE Paid = false; ";
+			stmt.executeUpdate(sql1);
+			
+			// If late book has been returned, insert into FINES table with Fine_amt value based on date in - due date
+			String sql2 = "INSERT IGNORE INTO sys.FINES "
+					+ "SELECT bl.Loan_id, DATEDIFF(bl.Date_in, bl.Due_date)*0.25, false "
+					+ "FROM sys.BOOK_LOANS AS bl "
+					+ "WHERE Date_in IS NOT NULL AND (SELECT DATEDIFF(Date_in, Due_date)) > 0; ";
+			stmt.executeUpdate(sql2);
+			
+			// If late book is still out, insert into FINES table with Fine_amt value based on current date - due date
+			String sql3 = "INSERT IGNORE INTO sys.FINES "
+					+ "SELECT bl.Loan_id, DATEDIFF(CURDATE(), bl.Due_date)*0.25, false "
+					+ "FROM sys.BOOK_LOANS AS bl "
+					+ "WHERE Date_in IS NULL AND (SELECT DATEDIFF(CURDATE(), Due_date)) > 0; ";
+			stmt.executeUpdate(sql3);
+			
+			// After each update, filter out previously paid fines
+			String sql4 = "DELETE FROM sys.FINES WHERE Paid = true; ";
+			stmt.executeUpdate(sql4);
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+    
+    // Mechanism to enter fine payments (using textfields + button)
+    public static void enterPayment(String Loan_id, float amount) {
+    	try {
+    		Statement stmt = con.createStatement();
+    		
+    		// Update Fine_amt of loan_id entered by user by amount entered by user only if the book has been returned
+    		String sql1 = "UPDATE sys.FINES AS fi SET Fine_amt = Fine_amt - '"+amount+"' "
+    				+ "WHERE fi.Loan_id = '"+Loan_id+"' AND fi.Loan_id = ( "
+    				+ "SELECT Loan_id "
+    				+ "FROM sys.BOOK_LOANS AS bl "
+    				+ "WHERE Date_in IS NOT NULL AND bl.Loan_id = fi.Loan_id);";
+    		stmt.executeUpdate(sql1);
+    		
+    		// Update Paid to true if book loan has been paid off
+    		String sql2 = "UPDATE sys.FINES "
+    				+ "SET Paid = true "
+    				+ "WHERE Fine_amt <= 0;";
+    		stmt.executeUpdate(sql2);
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
 
     //ADD YOU FUNCTIONS AND MAKE A CALL OF THIS IN THE CLASS YOU ARE IN
     //DOING THIS MAKES THE CODE LESS MESSY
