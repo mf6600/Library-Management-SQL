@@ -77,10 +77,10 @@ public class Home extends JFrame {
 		});
 		
 		// Bounds may need work
-		JButton btnUpdate = new JButton("Update Fines");
-		btnUpdate.setBounds(78, 170, 131, 23);
-		contentPane.add(btnUpdate);
-		btnUpdate.addActionListener(new ActionListener() {
+		JButton btnFines = new JButton("Fines");
+		btnFines.setBounds(78, 170, 131, 23);
+		contentPane.add(btnFines);
+		btnFines.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				Fines f = new Fines();
