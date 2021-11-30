@@ -41,9 +41,12 @@ public class Home extends JFrame {
 		btnSearch.addActionListener (new ActionListener() { 
 			  	public void actionPerformed(ActionEvent e) { 
 			  		if(!textField.getText().isEmpty()) {
-			  			dispose();
-				  		Search s = new Search(textField.getText());
-					    s.setVisible(true);
+						try {
+							databaseController db = new databaseController();
+							db.executeBookSearch(textField.getText());
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
 			  		}
 				} 
 		} );
