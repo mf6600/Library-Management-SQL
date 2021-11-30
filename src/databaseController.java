@@ -130,7 +130,6 @@ public class databaseController {
 
     }
     
-    // Update/Refresh Entries in FINES table
     public static void update() {
 		try {
 			Statement stmt = con.createStatement();
@@ -165,7 +164,6 @@ public class databaseController {
 		}
 	}
     
-    // Mechanism to enter fine payments (using textfields + button)
     public static void enterPayment(String Loan_id, float amount) {
     	try {
     		Statement stmt = con.createStatement();
