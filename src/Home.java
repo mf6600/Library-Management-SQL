@@ -76,6 +76,7 @@ public class Home extends JFrame {
 			}
 		});
 		
+		// Bounds may need work
 		JButton btnUpdate = new JButton("Update Fines");
 		btnUpdate.setBounds(78, 170, 131, 23);
 		contentPane.add(btnUpdate);
