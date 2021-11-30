@@ -43,7 +43,7 @@ public class Fines extends JFrame{
 		contentPane.setLayout(null);
 		
 		btnBack = new JButton("Back");
-		btnBack.setBounds(380, 25, 50, 20);
+		btnBack.setBounds(380, 25, 60, 20);
 		contentPane.add(btnBack);
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
