@@ -1,16 +1,21 @@
 import com.mysql.cj.jdbc.MysqlDataSource;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
-import java.sql.DriverManager;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class databaseController {
 
 
     private static Connection con = null;
+
+    public static JFrame frame_two = new JFrame("Results");
+    public static JTable table;
+    public static DefaultTableModel defaultTableModel;
 
     //CONSTRUCTOR
     public databaseController() {
@@ -34,27 +39,54 @@ public class databaseController {
     }
 
 
-    //SEARCH BOOK FUNCTION -- YET TO BE COMPLETED
-    //TAKES IN THE SEARCH AND RETURNS A VECTOR WITH SEARCH RESULT
-    public static Vector<String> executeBookSearch(String bookEntry) {
-        Vector<String> books = new Vector<>();
+     //SEARCH BOOK FUNCTION -- YET TO BE COMPLETED
+    public static void executeBookSearch(String bookEntry) {
+        frame_two.setLayout(new FlowLayout());
+        frame_two.setSize(1000, 1000);
+
+        //setting the properties of jtable and defaulttablemodel
+        defaultTableModel = new DefaultTableModel();
+        table = new JTable(defaultTableModel);
+        table.setPreferredScrollableViewportSize(new Dimension(1000, 100));
+        table.setFillsViewportHeight(true);
+        frame_two.add(new JScrollPane(table));
+        defaultTableModel.addColumn("ISBN10");
+        defaultTableModel.addColumn("TITLE");
+        defaultTableModel.addColumn("AUTHOR(S)");
+
+        JButton btnHome = new JButton("Home");
+        btnHome.setBounds(10, 11, 89, 23);
+        frame_two.add(btnHome);
+        btnHome.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame_two.dispose();
+                Home h = new Home();
+                h.setVisible(true);
+            }
+        });
 
         try {
-            Statement stmt = con.createStatement();
-
-            //HAVE TO RUN THE CORRECT SQL QUERY TO OUTPUT THE BOOK CONTENTS
-            ResultSet rs = stmt.executeQuery("SELECT Title FROM sys.BOOK");
+            String sql = "SELECT * FROM sys.BOOKS WHERE title LIKE '%" + bookEntry + " %';";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                System.out.println(rs.getString("Title"));
-                books.add(rs.getString("Title"));
+                String isbn10 = rs.getString("ISBN10");
+                String title = rs.getString("Title");
+                String authors = rs.getString("Author");
+                defaultTableModel.addRow(new Object[] {isbn10,title, authors});
+                DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+                centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+                table.setDefaultRenderer(String.class, centerRenderer);
+                frame_two.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame_two.setVisible(true);
+                frame_two.validate();
             }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        return books;
     }
 
 
