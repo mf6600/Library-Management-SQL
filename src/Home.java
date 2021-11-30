@@ -75,6 +75,17 @@ public class Home extends JFrame {
 				c.setVisible(true);
 			}
 		});
+		
+		JButton btnUpdate = new JButton("Update Fines");
+		btnUpdate.setBounds(78, 170, 131, 23);
+		contentPane.add(btnUpdate);
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Fines f = new Fines();
+				f.setVisible(true);
+			}
+		});
 	}
 
 }
