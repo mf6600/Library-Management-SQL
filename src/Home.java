@@ -42,6 +42,7 @@ public class Home extends JFrame {
 			  	public void actionPerformed(ActionEvent e) { 
 			  		if(!textField.getText().isEmpty()) {
 						try {
+							dispose();
 							databaseController db = new databaseController();
 							db.executeBookSearch(textField.getText());
 						} catch (Exception ex) {
