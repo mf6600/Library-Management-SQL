@@ -55,6 +55,8 @@ public class databaseController {
         defaultTableModel.addColumn("ISBN10");
         defaultTableModel.addColumn("TITLE");
         defaultTableModel.addColumn("AUTHOR(S)");
+        defaultTableModel.addColumn("Availability(0=A | 1=NA)");
+
 
         JButton btnHome = new JButton("Home");
         btnHome.setBounds(10, 11, 89, 23);
@@ -62,13 +64,17 @@ public class databaseController {
         btnHome.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame_two.dispose();
+                frame_two.getContentPane().removeAll();
+                frame_two.repaint();
                 Home h = new Home();
                 h.setVisible(true);
             }
         });
 
         try {
-            String sql = "SELECT * FROM sys.BOOKS WHERE title LIKE '%" + bookEntry + " %';";
+
+            int count = 0;
+            String sql = "SELECT * FROM sys.BOOKS WHERE (Title LIKE '%" + bookEntry + " %') OR ISBN10 LIKE '%"+ bookEntry + "%' OR Author LIKE '%" + bookEntry + "%'";
             PreparedStatement pstmt = con.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
 
@@ -76,6 +82,8 @@ public class databaseController {
                 String isbn10 = rs.getString("ISBN10");
                 String title = rs.getString("Title");
                 String authors = rs.getString("Author");
+
+
                 defaultTableModel.addRow(new Object[] {isbn10,title, authors});
                 DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
                 centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -83,6 +91,7 @@ public class databaseController {
                 frame_two.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame_two.setVisible(true);
                 frame_two.validate();
+                count++;
             }
         }
         catch (Exception e) {
@@ -91,7 +100,7 @@ public class databaseController {
 
     }
 
-
+    
     //ADD BORROWER FUNCTION -- COMPLETED
     public static void addBorrower(String ssn, String firstName, String lastName, String email, String address, String city, String state, String phone) {
 
