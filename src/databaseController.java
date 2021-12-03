@@ -41,7 +41,7 @@ public class databaseController {
     }
 
 
-    //SEARCH BOOK FUNCTION -- YET TO BE COMPLETED
+   //SEARCH BOOK FUNCTION -- COMPLETED
     public static void executeBookSearch(String bookEntry) {
         frame_two.setLayout(new FlowLayout());
         frame_two.setSize(1000, 1000);
@@ -72,26 +72,52 @@ public class databaseController {
         });
 
         try {
+            int searchOptions = 0;
 
-            int count = 0;
             String sql = "SELECT * FROM sys.BOOKS WHERE (Title LIKE '%" + bookEntry + " %') OR ISBN10 LIKE '%"+ bookEntry + "%' OR Author LIKE '%" + bookEntry + "%'";
             PreparedStatement pstmt = con.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
 
+
+            Vector<String> avail = new Vector<String>();
+            String sqlTwo = "SELECT Isbn FROM sys.BOOK_LOANS";
+            PreparedStatement pstmtTwo  = con.prepareStatement(sqlTwo);
+            ResultSet rsTwo = pstmtTwo.executeQuery();
+            while (rsTwo.next()) {
+                avail.add(rsTwo.getString(1));
+            }
+
+
             while (rs.next()) {
+
+                searchOptions = 1;
+                int availCheck = 0;
                 String isbn10 = rs.getString("ISBN10");
                 String title = rs.getString("Title");
                 String authors = rs.getString("Author");
 
+                for (int i = 0; i < avail.size(); i++) {
+                    if (isbn10.equals(avail.get(i))) {
+                        availCheck = 1;
+                        defaultTableModel.addRow(new Object[]{isbn10, title, authors, 1});
+                    }
+                }
 
-                defaultTableModel.addRow(new Object[] {isbn10,title, authors});
+                if (availCheck == 0)
+                    defaultTableModel.addRow(new Object[]{isbn10, title, authors, 0});
+
                 DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
                 centerRenderer.setHorizontalAlignment( JLabel.CENTER );
                 table.setDefaultRenderer(String.class, centerRenderer);
                 frame_two.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame_two.setVisible(true);
                 frame_two.validate();
-                count++;
+            }
+
+            if (searchOptions == 0) {
+                JOptionPane.showMessageDialog(null, "No Search Results");
+                Home home = new Home();
+                home.setVisible(true);
             }
         }
         catch (Exception e) {
