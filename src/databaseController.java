@@ -55,7 +55,7 @@ public class databaseController {
         defaultTableModel.addColumn("ISBN10");
         defaultTableModel.addColumn("TITLE");
         defaultTableModel.addColumn("AUTHOR(S)");
-        defaultTableModel.addColumn("Availability(0=A | 1=NA)");
+        defaultTableModel.addColumn("Availability");
 
 
         JButton btnHome = new JButton("Home");
@@ -99,12 +99,12 @@ public class databaseController {
                 for (int i = 0; i < avail.size(); i++) {
                     if (isbn10.equals(avail.get(i))) {
                         availCheck = 1;
-                        defaultTableModel.addRow(new Object[]{isbn10, title, authors, 1});
+                        defaultTableModel.addRow(new Object[]{isbn10, title, authors, "Not Available"});
                     }
                 }
 
                 if (availCheck == 0)
-                    defaultTableModel.addRow(new Object[]{isbn10, title, authors, 0});
+                    defaultTableModel.addRow(new Object[]{isbn10, title, authors, "Available"});
 
                 DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
                 centerRenderer.setHorizontalAlignment( JLabel.CENTER );
