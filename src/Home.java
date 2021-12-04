@@ -54,6 +54,21 @@ public class Home extends JFrame {
 
 		
 		
+		JButton btnSearch = new JButton("Search");
+		btnSearch.setBounds(10, 45, 89, 23);
+		contentPane.add(btnSearch);
+		btnSearch.addActionListener (new ActionListener() { 
+			  	public void actionPerformed(ActionEvent e) { 
+			  		if(!textField.getText().isEmpty()) {
+			  			dispose();
+				  		Search s = new Search(textField.getText());
+					    s.setVisible(true);
+			  		}
+				} 
+		} );
+
+		
+		
 		JButton btnBorrower = new JButton("New Borrower");
 		btnBorrower.setBounds(78, 144, 131, 23);
 		contentPane.add(btnBorrower);
@@ -77,15 +92,23 @@ public class Home extends JFrame {
 			}
 		});
 		
-		// Bounds may need work
-		JButton btnFines = new JButton("Fines");
-		btnFines.setBounds(78, 170, 131, 23);
-		contentPane.add(btnFines);
-		btnFines.addActionListener(new ActionListener() {
+		JButton btnCheckOut = new JButton("Check-Out");
+		btnCheckOut.setBounds(78, 178, 131, 23);
+		contentPane.add(btnCheckOut);
+		btnCheckOut.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				Fines f = new Fines();
-				f.setVisible(true);
+				CheckOut c = new CheckOut();
+				c.setVisible(true);
+			}
+		});
+		
+		JButton btnFines = new JButton("Fines");
+		btnFines.setBounds(232, 178, 131, 23);
+		contentPane.add(btnFines);
+		btnFines.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				dispose();
 			}
 		});
 	}
