@@ -109,6 +109,8 @@ public class Home extends JFrame {
 		btnFines.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				dispose();
+				Fines fine = new Fines();
+				fine.setVisible(true);
 			}
 		});
 	}
